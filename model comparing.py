@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Mar  9 11:42:40 2019
-
-@author: Jie
-"""
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -12,7 +5,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 ###############################################################################
-df = pd.read_csv('F:/0 - PhD at UTD/2019 Spring/4. BUAN 6341/assignment 2/meningitis.csv', ' ', index_col='ID')
+df = pd.read_csv('meningitis.csv', ' ', index_col='ID')
 X = df.drop(['MENINGITIS'], axis = 1).values
 y = df.MENINGITIS.values
 
@@ -25,7 +18,7 @@ print('Does a patient with headache, fever, and vomiting have meningitis?', '\n'
 print('with the probability of ', clf.predict_proba(X_predict)[0,0])
 
 ###############################################################################
-voice = pd.read_csv('F:/0 - PhD at UTD/2019 Spring/4. BUAN 6341/assignment 2/voice.csv')
+voice = pd.read_csv('voice.csv')
 
 print(voice.head())
 
@@ -37,7 +30,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 print(y.describe())
 
 
-# Train a SVM model; tune the best parameters C and gamma; [10 points]
+# Train a SVM model; tune the best parameters C and gamma; 
 from sklearn.metrics import accuracy_score
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
@@ -62,7 +55,7 @@ y_pred = logreg.predict(X_test)
 print('logreg accuracy score: ', accuracy_score(y_test, y_pred))
 
 
-# Train a decision tree (you need to select proper parameters) [10 points]
+# Train a decision tree (you need to select proper parameters) 
 from sklearn.tree import DecisionTreeClassifier
 tree = DecisionTreeClassifier(random_state=42)
 param_DT = {"max_depth": range(1,10),
@@ -75,7 +68,7 @@ print(grid_tree.best_params_)
 print('decision tree accuracy score: ', accuracy_score(y_test, y_pred))
 
 
-# Train a random forest model (you need to select proper parameters) [10 points]
+# Train a random forest model
 from sklearn.ensemble import RandomForestClassifier
 RF = RandomForestClassifier(n_estimators = 500, random_state = 42)
 param_RF = {'max_leaf_nodes':range(2,20)}
@@ -86,7 +79,7 @@ print(grid_RF.best_params_)
 print('random forest accuracy score: ', accuracy_score(y_test, y_pred))
 
 
-# use voting classifier to combine the above four model [10 points]
+# use voting classifier to combine the above four model
 from sklearn.ensemble import VotingClassifier
 svc = SVC(kernel = 'rbf', C=10000, gamma=0.001, random_state=42)
 logreg = LogisticRegression(solver="liblinear", random_state=42)
@@ -101,7 +94,7 @@ for clf in (svc, logreg, tree, RF, voting):
     print(clf.__class__.__name__, accuracy_score(y_test, y_pred))
 
 
-# apply decision tree (with your optimal model parameters) with adaboost [20 points]
+# apply decision tree with adaboost
 from sklearn.ensemble import AdaBoostClassifier
 
 ada_tree = AdaBoostClassifier(DecisionTreeClassifier(max_depth=5, max_leaf_nodes=15, min_samples_split=2, random_state=42), 
@@ -111,7 +104,7 @@ y_pred = ada_tree.predict(X_test)
 print('adaboost decision tree accuracy score: ', accuracy_score(y_test, y_pred))
 
 
-# apply svm (with your optimal model parameters) with adaboost [20 points]
+# apply svm with adaboost
 ada_svm = AdaBoostClassifier(SVC(kernel = 'rbf', C=10000, gamma=0.001, random_state=42),
                              n_estimators=500, algorithm='SAMME', learning_rate=0.5, random_state=42)
 ada_svm.fit(X_train, y_train)
@@ -120,7 +113,6 @@ print('adaboost svm accuracy score: ', accuracy_score(y_test, y_pred))
 
 
 # Plot the roc curves of the above NINE models
-# Select the proper measurements to compare the above nine models and report your decisions about the best model [10 points]
 svc = SVC(kernel = 'rbf', C=10000, gamma=0.001, probability=True, random_state=42)
 logreg = LogisticRegression(solver="liblinear", random_state=42)
 tree = DecisionTreeClassifier(max_depth=5, max_leaf_nodes=15, min_samples_split=2, random_state=42)
